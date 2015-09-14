@@ -1,6 +1,5 @@
 package gr.kourtzis;
 
-import java.io.Console;
 import java.util.Scanner;
 
 import java.util.regex.Pattern;
@@ -10,22 +9,14 @@ public class Prompter
 {
 	public Prompter(Game game_obj) 
 	{
-		/*
-		console_ = System.console();
-		if(console_ == null)
-		{
-			System.err.println("No console!");
-			System.exit(1);
-		}
-		*/
-
-		game_obj_ = game_obj; 
+		scanner_ = new Scanner(System.in);
+		game_obj_ = game_obj;
 		Configure();
 	}
 
 	public void Play()
 	{
-		while(true)//!game_obj_.GameOver() || !game_obj_.IsSolved(masked_answer_))
+		while(true)
 		{
 			if(game_obj_.GameOver()) break;
 			if(game_obj_.IsSolved(masked_answer_))
@@ -37,14 +28,16 @@ public class Prompter
 			PromptForGuess();
 			CheckGuess();
 		}
+
 		if(game_obj_.Found())
 		{
 			System.out.println("\nCongratulations. You found \"" + game_obj_.Answer() +
 					           "\" with " + game_obj_.RemainingTries() +
 					           " tries left\n");
 		}
-		else
-			System.out.println("\nHow unfortunated :( The word you were looking for was: " + game_obj_.Answer());
+		else System.out.println("\nHow unfortunated :( The word you were looking for was: " + game_obj_.Answer());
+
+		scanner_.close();
 	}
 
 	public void Display()
@@ -70,10 +63,7 @@ public class Prompter
 	private void Update(int condition, String message)
 	{
 		System.out.println(message);
-		if(condition != LETTER_NOT_FOUND)
-		{
-			Update(condition);
-		}
+		if(condition != LETTER_NOT_FOUND) Update(condition);
 	}
 
 	private void CheckGuess()
@@ -82,7 +72,7 @@ public class Prompter
 		if(end == LETTER_NOT_FOUND) 
 		{
 			Update(end, "Did not found it. Sorry :(");
-			game_obj_.Miss();
+			game_obj_.Guess(guess_);
 		} 
 		else
 		{
@@ -102,18 +92,16 @@ public class Prompter
 
 	private void PromptForGuess()
 	{
-		Scanner scanner = new Scanner(System.in);
 		do
 		{
 			System.out.print("Guess the word or enter a letter: ");
-			guess_ = scanner.nextLine();
-			//guess_  = console_.readLine("Guess the word or enter a letter: ");
+			guess_ = scanner_.nextLine();
 		}
 		while(!ValidatePrompt(guess_));
 	}
 	
 	//if we found a digit or a non-word character
-	// the imput from the user is invalid
+	// the input from the user is invalid
 	private boolean ValidatePrompt(String prompt)
 	{
 		if(prompt.isEmpty()) return false;
@@ -128,8 +116,7 @@ public class Prompter
 			Pattern pattern = Pattern.compile("[^a-zA-Z]");
 			Matcher matcher = pattern.matcher(prompt);
 
-			if(matcher.find()) return false;
-			else               return true;
+			return !matcher.find();
 		}
 	}
 
@@ -138,10 +125,11 @@ public class Prompter
 		for(char tmp : game_obj_.Answer().toCharArray()) masked_answer_ += "_";
 	}
 
-	private Console console_;
+	private Scanner scanner_;
 	private Game game_obj_;
 	private String guess_              = "";
 	private String masked_answer_      = "";
+
 	private final int LETTER_NOT_FOUND = -1;
 	private final int ONE_LETTER       = 1;
 }

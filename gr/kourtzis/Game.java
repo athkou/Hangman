@@ -25,11 +25,16 @@ public class Game
 	}
 	public void Guess(String letter)
 	{
-		if(!GuessLetter(letter)) Miss();
-		else
+		// wrong letter and did not use it before
+		if(!GuessLetter(letter) && !letters_.contains(letter))
 		{
-			if(letters_.indexOf(letter) == -1) letters_ += letter;
+			Miss();
+			letters_ += letter;
 		}
+
+		// Right letter. Checking if the word contains more than once the letter
+		if(!letters_.contains(letter)) letters_ += letter;
+
 	}
 
 	private String answer_;
@@ -37,6 +42,6 @@ public class Game
 	private String letters_  = "";
 	private int remaining_tries_;
 
-	private final int MAX_TRIES = 7;
-	private final int GAME_OVER = 0;
+	private final int MAX_TRIES        = 7;
+	private final int GAME_OVER        = 0;
 }
