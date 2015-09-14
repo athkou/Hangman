@@ -1,6 +1,7 @@
 package gr.kourtzis;
 
 import java.io.Console;
+import java.util.Scanner;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -9,12 +10,14 @@ public class Prompter
 {
 	public Prompter(Game game_obj) 
 	{
+		/*
 		console_ = System.console();
 		if(console_ == null)
 		{
 			System.err.println("No console!");
 			System.exit(1);
 		}
+		*/
 
 		game_obj_ = game_obj; 
 		Configure();
@@ -22,29 +25,38 @@ public class Prompter
 
 	public void Play()
 	{
-		while(!game_obj_.GameOver() || !game_obj_.IsSolved(masked_answer_))
+		while(true)//!game_obj_.GameOver() || !game_obj_.IsSolved(masked_answer_))
 		{
-			//Test();
+			if(game_obj_.GameOver()) break;
+			if(game_obj_.IsSolved(masked_answer_))
+			{
+				game_obj_.ChangeState(true);
+				break;
+			}
 			Display();
 			PromptForGuess();
 			CheckGuess();
 		}
+		if(game_obj_.Found())
+		{
+			System.out.println("\nCongratulations. You found \"" + game_obj_.Answer() +
+					           "\" with " + game_obj_.RemainingTries() +
+					           " tries left\n");
+		}
+		else
+			System.out.println("\nHow unfortunated :( The word you were looking for was: " + game_obj_.Answer());
 	}
 
 	public void Display()
 	{
-		System.out.print("Word to guess: ");
+		System.out.print("\n\nWord to guess: ");
 		System.out.println(masked_answer_);
 		System.out.println("Remaining tries: " + game_obj_.RemainingTries());
 		System.out.print("Letters used: ");
 		
 		char temp[] = game_obj_.Letters().toCharArray();
-		for(int it : temp) System.out.print(temp[it] + ", "); 
+		for(char ch : temp) System.out.print("" + ch + ", ");
 		System.out.println();
-
-		//PromptForGuess();
-		//System.out.println("You guessed: " + guess_);
-		//CheckGuess();
 	}
 	private void Update(int index)
 	{
@@ -90,9 +102,12 @@ public class Prompter
 
 	private void PromptForGuess()
 	{
+		Scanner scanner = new Scanner(System.in);
 		do
 		{
-			guess_  = console_.readLine("Guess the word or enter a letter: ");
+			System.out.print("Guess the word or enter a letter: ");
+			guess_ = scanner.nextLine();
+			//guess_  = console_.readLine("Guess the word or enter a letter: ");
 		}
 		while(!ValidatePrompt(guess_));
 	}
@@ -118,18 +133,6 @@ public class Prompter
 		}
 	}
 
-	private void Test()
-	{
-		/*
-		String temp = "example";
-		String tmp = "";
-		
-		for(char ch : temp.toCharArray())
-			tmp += "_";
-		System.out.println("Guessed so far: " + tmp);
-		System.out.println("Enter a letter: ");
-		*/
-	}
 	private void Configure()
 	{
 		for(char tmp : game_obj_.Answer().toCharArray()) masked_answer_ += "_";

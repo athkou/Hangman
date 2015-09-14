@@ -26,7 +26,10 @@ public class Game
 	public void Guess(String letter)
 	{
 		if(!GuessLetter(letter)) Miss();
- 		letters_ += letter;
+		else
+		{
+			if(letters_.indexOf(letter) == -1) letters_ += letter;
+		}
 	}
 
 	private String answer_;
