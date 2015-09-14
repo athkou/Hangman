@@ -36,10 +36,7 @@ public class Prompter
 	private void CheckGuess()
 	{
 		int end = game_obj_.Answer().indexOf(guess_);
-		if(end == LETTER_NOT_FOUND)
-		{
-			System.out.println(guess_ + " not found. Sorry :(");
-		}
+		if(end == LETTER_NOT_FOUND) System.out.println(guess_ + " not found. Sorry :("); 
 		else
 		{
 			int begin = 0;
