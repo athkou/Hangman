@@ -35,7 +35,7 @@ public class Prompter
 					           "\" with " + game_obj_.RemainingTries() +
 					           " tries left\n");
 		}
-		else System.out.println("\nHow unfortunated :( The word you were looking for was: " + game_obj_.Answer());
+		else System.out.println("\nHow unfortunate :( The word you were looking for was: " + game_obj_.Answer());
 
 		scanner_.close();
 	}
