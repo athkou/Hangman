@@ -10,7 +10,7 @@ public class Hangman
 
 		try
 		{
-			prompter.Display();
+			prompter.Play();
 		}
 		catch(Exception ex)
 		{
