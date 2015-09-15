@@ -1,12 +1,22 @@
 package gr.kourtzis;
 
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Random;
+
 public class Game
 {
 	public Game(String answer)
 	{	
 		answer_ = answer;
-		found_ = false;
-		remaining_tries_ = MAX_TRIES;
+		Init();
+	}
+
+	public Game(String answers[])
+	{
+		PopulateList(answers);
+		ChooseRandomWord();
+		Init();
 	}
 
 	public String Answer()                       { return answer_;                                }
@@ -37,11 +47,31 @@ public class Game
 
 	}
 
+	private void PopulateList(String answers[])
+	{
+		List<String> words_ = new ArrayList<>();
+		for(String temp : answers) words_.add(temp);
+	}
+
+	private void ChooseRandomWord()
+	{
+		Random generator = new Random();
+		int index = generator.nextInt(words_.size() - 1);
+		answer_ = words_.get(index);
+	}
+
+	private void Init()
+	{
+		found_           = false;
+		remaining_tries_ = DEFAULT_TRIES;
+	}
+
 	private String answer_;
 	private boolean found_;
 	private String letters_  = "";
 	private int remaining_tries_;
+	private List<String> words_;
 
-	private final int MAX_TRIES        = 7;
+	private final int DEFAULT_TRIES        = 7;
 	private final int GAME_OVER        = 0;
 }
