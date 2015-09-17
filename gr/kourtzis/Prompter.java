@@ -9,7 +9,7 @@ public class Prompter
 {
 	public Prompter(Game game_obj) 
 	{
-		scanner_ = new Scanner(System.in);
+		scanner_  = new Scanner(System.in);
 		game_obj_ = game_obj;
 		Configure();
 	}

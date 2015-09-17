@@ -53,8 +53,8 @@ public class Game
 	private void ChooseRandomWord()
 	{
 		Random generator = new Random();
-		int index = generator.nextInt(words_.size() - 1);
-		answer_ = words_.get(index);
+		int index        = generator.nextInt(words_.size() - 1);
+		answer_          = words_.get(index);
 	}
 
 	private void Init()
