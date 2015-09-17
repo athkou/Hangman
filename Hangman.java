@@ -5,7 +5,16 @@ public class Hangman
 	public static void 
 	main(String argv[])
 	{
-		Game hangman = new Game("example");
+		String list[] =
+		{
+			"hangman", "treehouse", "development",
+			"interface", "rhythm", "zephyr",
+			"equilibrium", "quake", "jazz",
+			"babe", "swan", "trumpet",
+			"judo", "soccer", "physics"
+		};
+
+		Game hangman = new Game(list);
 		Prompter prompter = new Prompter(hangman);
 
 		try

@@ -29,10 +29,7 @@ public class Game
 	public boolean GameOver()                    { return remaining_tries_ == GAME_OVER;          }
 	
 	public void ChangeState(boolean new_state)   { found_ = new_state;                            }
-	public void Miss()
-	{
-		 if(!GameOver()) --remaining_tries_;
-	}
+	public void Miss()                           { if(!GameOver()) --remaining_tries_;            }
 	public void Guess(String letter)
 	{
 		// wrong letter and did not use it before
@@ -49,7 +46,7 @@ public class Game
 
 	private void PopulateList(String answers[])
 	{
-		List<String> words_ = new ArrayList<>();
+		words_ = new ArrayList<>();
 		for(String temp : answers) words_.add(temp);
 	}
 
@@ -72,6 +69,6 @@ public class Game
 	private int remaining_tries_;
 	private List<String> words_;
 
-	private final int DEFAULT_TRIES        = 7;
+	private final int DEFAULT_TRIES    = 7;
 	private final int GAME_OVER        = 0;
 }
