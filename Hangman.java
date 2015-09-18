@@ -1,5 +1,9 @@
 import gr.kourtzis.*;
 
+/**
+ * Hangman class. The main starting point of the application.
+ * Declares the game and prompter objects and has hardcoded a list of words to be used.
+ */
 public class Hangman
 {
 	public static void 
