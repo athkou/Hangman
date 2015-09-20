@@ -1,4 +1,5 @@
-import gr.kourtzis.*;
+import gr.kourtzis.Game;
+import gr.kourtzis.Prompter;
 
 /**
  * Hangman class. The main starting point of the application.

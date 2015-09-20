@@ -151,8 +151,6 @@ public class Prompter
 		}
 		while(!ValidatePrompt(guess_));
 	}
-	
-
 
 	/**
 	 * The member method ValidatePrompt() validates the input from the user.
@@ -163,14 +161,11 @@ public class Prompter
 	private boolean ValidatePrompt(String prompt)
 	{
 		if(prompt.isEmpty()) return false;
-		//if(prompt.length() != ONE_LETTER)
-		//{
 
-			Pattern pattern = Pattern.compile("[^a-zA-Z]");
-			Matcher matcher = pattern.matcher(prompt);
+		Pattern pattern = Pattern.compile("[^a-zA-Z]");
+		Matcher matcher = pattern.matcher(prompt);
 
-			return !matcher.find();
-		//}
+		return !matcher.find();
 	}
 
 	/**

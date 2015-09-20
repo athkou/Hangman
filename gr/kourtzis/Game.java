@@ -20,6 +20,10 @@ public class Game
 		Init();
 	}
 
+	/**
+	 * The constructor of the class. It initializes the member variables
+	 * @param answers An array of strings. Contains the words to be guessed.
+	 */
 	public Game(String answers[])
 	{
 		PopulateList(answers);
@@ -27,17 +31,71 @@ public class Game
 		Init();
 	}
 
+	/**
+	 * The public method Answer. Accessory method to return
+	 * the value of the variable answer_
+	 * @return The string of the member variable answer_.
+	 */
 	public String Answer()                       { return answer_;                                }
+
+	/**
+	 * The public method Found. Accessory method to return
+	 * the value of the variable found_
+	 * @return true or false
+	 */
 	public boolean Found()                       { return found_;                                 }
+
+	/**
+	 * The public method GuessLetter.
+	 * @param letter the letter the user picked up as a guess
+	 * @return it return true or false, whether the word contains the letter
+	 */
 	public boolean GuessLetter(String letter)    { return answer_.contains(letter);               }
+
+	/**
+	 * The public method Letters. Accessory method to return
+	 * the value of the variable letters_
+	 * @return The string of the member variable letters_.
+	 */
 	public String Letters()                      { return letters_;                               }
+
+	/**
+	 * The public method RemainingTries. Accessory method to return
+	 * the value of the variable remaining_tries_.
+	 * @return The integer of the member variable remaining_tries_.
+	 */
 	public int RemainingTries()                  { return remaining_tries_;                       }
 
+	/**
+	 * The public method IsSolved. It checks if the user was able to solve the problem.
+	 * @param guess_so_far A string variable containing the guesses from the user
+	 * @return true or false
+	 */
 	public boolean IsSolved(String guess_so_far) { return answer_.equalsIgnoreCase(guess_so_far); }
+
+	/**
+	 * The public method GameOver. It checks if the game is over.
+	 * @return true or false
+	 */
 	public boolean GameOver()                    { return remaining_tries_ == GAME_OVER;          }
-	
+
+	/**
+	 * The public method ChangeState. It changes the value of the member variable found_
+	 * @param new_state a boolean variable.
+	 */
 	public void ChangeState(boolean new_state)   { found_ = new_state;                            }
+
+	/**
+	 * The public method Miss. Each time the user makes a wrong guess
+	 * his tries are being decreased.
+	 */
 	public void Miss()                           { --remaining_tries_;                            }
+
+	/**
+	 * The public method Guess. Calls the method GuessString and
+	 * under some conditions it populates the variable letters_
+	 * @param letter A string variable that contains the input from the user
+	 */
 	public void Guess(String letter)
 	{
 		// wrong letter and did not use it before
@@ -52,12 +110,19 @@ public class Game
 
 	}
 
+	/**
+	 * The private method PopulateList. It fills the list with words.
+	 * @param answers A string array that contains words.
+	 */
 	private void PopulateList(String answers[])
 	{
 		words_ = new ArrayList<>();
 		for(String temp : answers) words_.add(temp);
 	}
 
+	/**
+	 * The private method ChooseRandomWord. It chooses randomly a word from the list to be guessed.
+	 */
 	private void ChooseRandomWord()
 	{
 		Random generator = new Random();
@@ -65,6 +130,9 @@ public class Game
 		answer_          = words_.get(index);
 	}
 
+	/**
+	 * The private method Init. It initializes its member variables with values.
+	 */
 	private void Init()
 	{
 		found_           = false;
