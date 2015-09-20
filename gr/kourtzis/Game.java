@@ -140,11 +140,11 @@ public class Game
 		letters_         = "";
 	}
 
-	private String answer_;
-	private boolean found_;
-	private String letters_;
-	private int remaining_tries_;
-	private List<String> words_;
+	private String answer_;			/**< The string variable that contains the word that has to be found*/
+	private boolean found_;			/**< A boolean variable which indicates if the user was able to found the word*/
+	private String letters_;		/**< A string variable that contains all the letters used to find the word*/
+	private int remaining_tries_;	/**< An integer with the tries the user has left to found the word*/
+	private List<String> words_;	/**< A list of words*/
 
 	private final int DEFAULT_TRIES    = 7;
 	private final int GAME_OVER        = 0;
