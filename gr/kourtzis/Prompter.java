@@ -1,5 +1,6 @@
 package gr.kourtzis;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 import java.util.regex.Pattern;
@@ -14,11 +15,12 @@ public class Prompter
 	/**
 	 * The constructor of the prompter class. Initializes the member variables.
 	 * @param game_obj an object of the Game class
+	 * @param scanner a Scanner object or taking input from the user
 	 */
-	public Prompter(Game game_obj) 
+	public Prompter(Game game_obj, Scanner scanner)
 	{
-		scanner_  = new Scanner(System.in);
 		game_obj_ = game_obj;
+		scanner_ = scanner;
 		Configure();
 	}
 
@@ -26,7 +28,7 @@ public class Prompter
 	 * The member method Play() plays the game of hangman.
 	 * It doesn't take any parameters and doesn't return anything.
 	 */
-	public void Play()
+	public void Play() throws IOException
 	{
 		while(!game_obj_.Found())
 		{
@@ -176,7 +178,7 @@ public class Prompter
 		for(char tmp : game_obj_.Answer().toCharArray()) masked_answer_ += "_";
 	}
 
-	private Scanner scanner_;                       /**< A private Scanner variable. Is used to take input from the user */
+	private Scanner scanner_;  						/**< A private Scanner variable. Is used to take input from the user */
 	private Game game_obj_;    						/**< The private Game object variable */
 	private String guess_              = "";		/**< A private String variable. Stores the answer from the user */
 	private String masked_answer_      = "";        /**< A private String variable. It masks the answer */

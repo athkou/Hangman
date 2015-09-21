@@ -1,5 +1,9 @@
 import gr.kourtzis.Game;
 import gr.kourtzis.Prompter;
+import org.xml.sax.ErrorHandler;
+
+import java.io.IOException;
+import java.util.Scanner;
 
 /**
  * Hangman class. The main starting point of the application.
@@ -21,17 +25,30 @@ public class Hangman
 			"mystery", "magician", "wizard"
 		};
 
-		Game hangman      = new Game(list_of_words);
-		Prompter prompter = new Prompter(hangman);
 
-		try
+
+		try(Scanner scanner = new Scanner(System.in))
 		{
+
+			Game hangman      = new Game(list_of_words);
+			Prompter prompter = new Prompter(hangman, scanner);
+
 			prompter.Play();
+		}
+		catch(IOException ex)
+		{
+			ErrorHandler(ex);
 		}
 		catch(Exception ex)
 		{
-			System.out.println(ex.getMessage());
+			ErrorHandler(ex);
 		}
+	}
+
+	private static void ErrorHandler(Exception ex)
+	{
+		System.out.println("An exception occurred: " + ex.getMessage());
+		ex.printStackTrace();
 	}
 
 }
