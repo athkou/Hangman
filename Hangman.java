@@ -34,12 +34,7 @@ public class Hangman
 			Prompter prompter = new Prompter(hangman, scanner);
 
 			prompter.Play();
-		}
-		catch(IOException ex)
-		{
-			ErrorHandler(ex);
-		}
-		catch(Exception ex)
+		} catch(Exception ex)
 		{
 			ErrorHandler(ex);
 		}
