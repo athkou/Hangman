@@ -6,12 +6,21 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
+
 /**
  * The prompter class. Implements the game logic. Takes input from the user, checks if it is valid
  * and determines if the user is able to solve and find the word.
  */
-public class Prompter
-{
+public class Prompter {
+
+	private Scanner mScanner;  						/**< A private Scanner variable. Is used to take input from the user */
+	private Game mGameObj;    						/**< The private Game object variable */
+	private String mGuess              = "";		/**< A private String variable. Stores the answer from the user */
+	private String mMaskedAnswer       = "";        /**< A private String variable. It masks the answer */
+
+	private final int LETTER_NOT_FOUND = -1;
+
+
 	/**
 	 * The constructor of the prompter class. Initializes the member variables.
 	 * @param game_obj an object of the Game class
@@ -19,10 +28,11 @@ public class Prompter
 	 */
 	public Prompter(Game game_obj, Scanner scanner)
 	{
-		game_obj_ = game_obj;
-		scanner_ = scanner;
+		mGameObj = game_obj;
+		mScanner = scanner;
 		Configure();
 	}
+
 
 	/**
 	 * The member method Play() plays the game of hangman.
@@ -30,30 +40,32 @@ public class Prompter
 	 */
 	public void Play() throws IOException
 	{
-		while(!game_obj_.Found())
+		while(!mGameObj.Found())
 		{
-			if(game_obj_.GameOver()) break;
-			if(game_obj_.IsSolved(masked_answer_))
+			if(mGameObj.GameOver()) break;
+			if(mGameObj.IsSolved(mMaskedAnswer))
 			{
-				game_obj_.ChangeState(true);
+				mGameObj.ChangeState(true);
 				break;
 			}
 			Display();
 			PromptForGuess();
-			if(guess_.length() != ONE_LETTER) CheckGuess(guess_);
+			int ONE_LETTER = 1;
+			if(mGuess.length() != ONE_LETTER) CheckGuess(mGuess);
 			else 					          CheckGuess();
 		}
 
-		if(game_obj_.Found())
+		if(mGameObj.Found())
 		{
-			System.out.println("\nCongratulations. You found \"" + game_obj_.Answer() +
-					           "\" with " + game_obj_.RemainingTries() +
+			System.out.println("\nCongratulations. You found \"" + mGameObj.Answer() +
+					           "\" with " + mGameObj.RemainingTries() +
 					           " tries left\n");
 		}
-		else System.out.println("\nHow unfortunate :( The word you were looking for was: " + game_obj_.Answer());
+		else System.out.println("\nHow unfortunate :( The word you were looking for was: " + mGameObj.Answer());
 
-		scanner_.close();
+		mScanner.close();
 	}
+
 
 	/**
 	 * The Interface of the game. It displays the masked answer,
@@ -62,14 +74,15 @@ public class Prompter
 	public void Display()
 	{
 		System.out.print("\n\nWord to guess: ");
-		System.out.println(masked_answer_);
-		System.out.println("Remaining tries: " + game_obj_.RemainingTries());
+		System.out.println(mMaskedAnswer);
+		System.out.println("Remaining tries: " + mGameObj.RemainingTries());
 		System.out.print("Letters used: ");
 		
-		char temp[] = game_obj_.Letters().toCharArray();
+		char temp[] = mGameObj.Letters().toCharArray();
 		for(char ch : temp) System.out.print("" + ch + ", ");
 		System.out.println();
 	}
+
 
 	/**
 	 * The member method Update() updates the masked answer
@@ -78,12 +91,13 @@ public class Prompter
 	 */
 	private void Update(int index)
 	{
-		game_obj_.Guess(guess_);
-		char temp[] = masked_answer_.toCharArray();
-		temp[index] = guess_.charAt(0);
+		mGameObj.Guess(mGuess);
+		char temp[] = mMaskedAnswer.toCharArray();
+		temp[index] = mGuess.charAt(0);
 
-		masked_answer_ = String.copyValueOf(temp);
+		mMaskedAnswer = String.copyValueOf(temp);
 	}
+
 
 	/**
 	 * The member method Update() updates the masked answer
@@ -97,6 +111,7 @@ public class Prompter
 		if(condition != LETTER_NOT_FOUND) Update(condition);
 	}
 
+
 	/**
 	 * The member method checks if the word
 	 * the user typed matches the word we are looking for.
@@ -104,13 +119,14 @@ public class Prompter
 	 */
 	private void CheckGuess(String word)
 	{
-		if(game_obj_.IsSolved(word)) game_obj_.ChangeState(true);
+		if(mGameObj.IsSolved(word)) mGameObj.ChangeState(true);
 		else
 		{
 			System.out.println("The word \"" + word + "\" is wrong :(");
-			game_obj_.Miss();
+			mGameObj.Miss();
 		}
 	}
+
 
 	/**
 	 * The member method checks if the word contains the letter
@@ -118,27 +134,28 @@ public class Prompter
 	 */
 	private void CheckGuess()
 	{
-		int end = game_obj_.Answer().indexOf(guess_);
+		int end = mGameObj.Answer().indexOf(mGuess);
 		if (end == LETTER_NOT_FOUND)
 		{
 			Update(end, "Did not found it. Sorry :(");
-			game_obj_.Guess(guess_);
+			mGameObj.Guess(mGuess);
 		}
 		else
 		{
 			Update(end, "Nice! we have a match");
 
-			int begin = 0;
+			int begin;
 			while (end != LETTER_NOT_FOUND)
 			{
 				Update(end);
 				// Start the new search one position
 				// after the letter was found to avoid endless-loop
 				begin = ++end;
-				end = game_obj_.Answer().indexOf(guess_, begin);
+				end = mGameObj.Answer().indexOf(mGuess, begin);
 			}
 		}
 	}
+
 
 	/**
 	 * The member method PromptForGuess() asks the user to type a letter
@@ -149,10 +166,11 @@ public class Prompter
 		do
 		{
 			System.out.print("Guess the word or enter a letter: ");
-			guess_ = scanner_.nextLine();
+			mGuess = mScanner.nextLine();
 		}
-		while(!ValidatePrompt(guess_));
+		while(!ValidatePrompt(mGuess));
 	}
+
 
 	/**
 	 * The member method ValidatePrompt() validates the input from the user.
@@ -170,19 +188,14 @@ public class Prompter
 		return !matcher.find();
 	}
 
+
 	/**
 	 * The member method Configure masks the answer.
 	 */
 	private void Configure()
 	{
-		for(char tmp : game_obj_.Answer().toCharArray()) masked_answer_ += "_";
+		for(char tmp : mGameObj.Answer().toCharArray()) mMaskedAnswer += "_";
 	}
 
-	private Scanner scanner_;  						/**< A private Scanner variable. Is used to take input from the user */
-	private Game game_obj_;    						/**< The private Game object variable */
-	private String guess_              = "";		/**< A private String variable. Stores the answer from the user */
-	private String masked_answer_      = "";        /**< A private String variable. It masks the answer */
 
-	private final int LETTER_NOT_FOUND = -1;
-	private final int ONE_LETTER       = 1;
 }
