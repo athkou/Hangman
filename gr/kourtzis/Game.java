@@ -1,5 +1,6 @@
 package gr.kourtzis;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
@@ -117,7 +118,7 @@ public class Game
 	private void PopulateList(String answers[])
 	{
 		words_ = new ArrayList<>();
-		for(String temp : answers) words_.add(temp);
+		Collections.addAll(words_, answers);
 	}
 
 	/**
