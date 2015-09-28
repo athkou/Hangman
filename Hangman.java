@@ -1,8 +1,5 @@
 import gr.kourtzis.Game;
 import gr.kourtzis.Prompter;
-import org.xml.sax.ErrorHandler;
-
-import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -25,30 +22,24 @@ public class Hangman
 			"mystery", "magician", "wizard"
 		};
 
-
+		boolean easy_mode = false;
+		if(argv.length > 0) easy_mode = ChooseMode(argv[0]);
 
 		try(Scanner scanner = new Scanner(System.in))
 		{
-
-			Game hangman      = new Game(list_of_words);
+			Game hangman      = new Game(list_of_words, easy_mode);
 			Prompter prompter = new Prompter(hangman, scanner);
 
 			prompter.Play();
 		}
-		catch(IOException ex)
-		{
-			ErrorHandler(ex);
-		}
-		catch(Exception ex)
-		{
-			ErrorHandler(ex);
-		}
+		catch(Exception ex) { ErrorHandler(ex); }
 	}
+
+	private static boolean ChooseMode(String mode) { return !mode.isEmpty() && (mode.equalsIgnoreCase("easy")); }
 
 	private static void ErrorHandler(Exception ex)
 	{
-		System.out.println("An exception occurred: " + ex.getMessage());
+		System.err.println("An exception occurred: " + ex.getMessage());
 		ex.printStackTrace();
 	}
-
 }

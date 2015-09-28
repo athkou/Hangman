@@ -25,11 +25,12 @@ public class Game
 	 * The constructor of the class. It initializes the member variables
 	 * @param answers An array of strings. Contains the words to be guessed.
 	 */
-	public Game(String answers[])
+	public Game(String answers[], boolean mode)
 	{
 		PopulateList(answers);
 		ChooseRandomWord();
 		Init();
+		easy_mode_ = mode;
 	}
 
 	/**
@@ -45,6 +46,13 @@ public class Game
 	 * @return true or false
 	 */
 	public boolean Found()                       { return found_;                                 }
+
+	/**
+	 * The public method Mode. Accessory method to return
+	 * the value of the variable easy_mode_
+	 * @return true or false
+	 */
+	public boolean Mode()                        { return easy_mode_;                             }
 
 	/**
 	 * The public method GuessLetter.
@@ -85,6 +93,12 @@ public class Game
 	 * @param new_state a boolean variable.
 	 */
 	public void ChangeState(boolean new_state)   { found_ = new_state;                            }
+
+	/**
+	 * The public method ChangeMode. It changes the value of the member variable easy_mode_
+	 * @param new_mode a boolean variable.
+	 */
+	public void ChangeMode(boolean new_mode)   { easy_mode_ = new_mode;                           }
 
 	/**
 	 * The public method Miss. Each time the user makes a wrong guess
@@ -143,6 +157,7 @@ public class Game
 
 	private String answer_;			/**< The string variable that contains the word that has to be found*/
 	private boolean found_;			/**< A boolean variable which indicates if the user was able to found the word*/
+	private boolean easy_mode_;		/**< A boolean variable which indicates if the user chooses the easy mode*/
 	private String letters_;		/**< A string variable that contains all the letters used to find the word*/
 	private int remaining_tries_;	/**< An integer with the tries the user has left to found the word*/
 	private List<String> words_;	/**< A list of words*/

@@ -113,20 +113,32 @@ public class Prompter
 	}
 
 	/**
-	 * The member method checks if the word contains the letter
-	 * that was given by the user.
+	 * If the user plays in easy mode the methods calls CheckGuessImpl() with empty Strings.
+	 * Otherwise it calls CheckGuessImpl() with the appropriate messages.
 	 */
 	private void CheckGuess()
+	{
+		if(game_obj_.Mode()) CheckGuessImpl("", "");
+		else                 CheckGuessImpl("Did not found it. Sorry :(", "Nice! we have a match");
+}
+
+	/**
+	 * The member method checks if the word contains the letter that was given by the user.
+	 *
+	 * @param wrong_msg A String variable which is printed when the user picks a wrong letter
+	 * @param right_msg A String variable which is printed when the user picks a right letter
+	 */
+	private void CheckGuessImpl(String wrong_msg, String right_msg)
 	{
 		int end = game_obj_.Answer().indexOf(guess_);
 		if (end == LETTER_NOT_FOUND)
 		{
-			Update(end, "Did not found it. Sorry :(");
+			Update(end, wrong_msg);
 			game_obj_.Guess(guess_);
 		}
 		else
 		{
-			Update(end, "Nice! we have a match");
+			Update(end, right_msg);
 
 			int begin = 0;
 			while (end != LETTER_NOT_FOUND)
@@ -171,11 +183,41 @@ public class Prompter
 	}
 
 	/**
-	 * The member method Configure masks the answer.
+	 * The private method CheckMode(). If the user has selected the easy mode the method
+	 * calls twice the CheckModeImpl() method for the first and last letter.
+	 */
+	private void CheckMode()
+	{
+		if(game_obj_.Mode())
+		{
+			int LAST_LETTER = game_obj_.Answer().length() - 1;
+
+			CheckModeImpl(FIRST_LETTER);
+			CheckModeImpl(LAST_LETTER);
+		}
+	}
+
+	/**
+	 * The private method CheckModeImpl(). The method is called to assist
+	 * the user by giving him a letter less to guess.
+	 * @param index An integer, is used to indexing a string variable.
+	 */
+	private void CheckModeImpl(int index)
+	{
+		char temp = game_obj_.Answer().charAt(index);
+		guess_ = String.valueOf(temp);
+		CheckGuess();
+	}
+
+	/**
+	 * The member method Configure masks the answer
+	 * and checks if the easy mode is selected.
 	 */
 	private void Configure()
 	{
 		for(char tmp : game_obj_.Answer().toCharArray()) masked_answer_ += "_";
+
+		CheckMode();
 	}
 
 	private Scanner scanner_;  						/**< A private Scanner variable. Is used to take input from the user */
@@ -183,6 +225,7 @@ public class Prompter
 	private String guess_              = "";		/**< A private String variable. Stores the answer from the user */
 	private String masked_answer_      = "";        /**< A private String variable. It masks the answer */
 
+	private final int FIRST_LETTER     = 0;
 	private final int LETTER_NOT_FOUND = -1;
 	private final int ONE_LETTER       = 1;
 }
