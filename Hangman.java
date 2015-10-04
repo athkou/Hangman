@@ -2,19 +2,17 @@ import gr.kourtzis.Game;
 import gr.kourtzis.Prompter;
 import gr.kourtzis.SQLiteDB;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Scanner;
 
-import java.sql.*;
-
-/**
- * Hangman class. The main starting point of the application.
- * Declares the game and prompter objects and has hardcoded a list of words to be used.
- */
 public class Hangman
 {
 	public static void 
 	main(String argv[])
 	{
+		InitDB();
 		TestDB();
 		String list_of_words[] =
 		{
@@ -45,44 +43,108 @@ public class Hangman
 
 	private static void TestDB()
 	{
+
+	}
+
+	private static void InitDB()
+	{
 		try
 		{
 			SQLiteDB my_db = new SQLiteDB();
-			Statement create_table = null;
+			Statement stmt = null;
 
-			String statement = "DELETE FROM LANGUAGE";
-			my_db.Execute(create_table, statement);
+			String sql_op = "DELETE FROM WORD_IN_CAT";
+			my_db.Execute(stmt, sql_op);
+			sql_op = "DELETE FROM WORDS";
+			my_db.Execute(stmt, sql_op);
+			sql_op = "DELETE FROM CATEGORY";
+			my_db.Execute(stmt, sql_op);
+			sql_op = "DELETE FROM LANGUAGE";
+			my_db.Execute(stmt, sql_op);
+			System.out.println("DELETE command ok");
 
-			statement = "CREATE TABLE IF NOT EXISTS LANGUAGE " +
-					           "(ID   INT PRIMARY KEY NOT NULL," +
-					           " DESC VARCHAR(25))";
-			my_db.Execute(create_table, statement);
+			sql_op = "DROP TABLE IF EXISTS WORD_IN_CAT";
+			my_db.Execute(stmt, sql_op);
+			sql_op = "DROP TABLE IF EXISTS WORDS";
+			my_db.Execute(stmt, sql_op);
+			sql_op = "DROP TABLE IF EXISTS CATEGORY";
+			my_db.Execute(stmt, sql_op);
+			sql_op = "DROP TABLE IF EXISTS LANGUAGE";
+			my_db.Execute(stmt, sql_op);
+			System.out.println("DROP command ok");
 
-			statement = "INSERT INTO LANGUAGE(ID, DESC) " +
-			            "VALUES (1, \"Greek\")," +
-						"(2, \"English\")," +
-						"(3, \"German\")";
-			my_db.Execute(create_table, statement);
+			sql_op = "CREATE TABLE IF NOT EXISTS LANGUAGE " +
+					"(LANG_ID INT PRIMARY KEY ASC," +
+					" DESC VARCHAR(25))";
+			my_db.Execute(stmt, sql_op);
 
-			statement = "SELECT * FROM LANGUAGE";
+			sql_op = "CREATE TABLE IF NOT EXISTS CATEGORY " +
+					"(CAT_ID INT PRIMARY KEY ASC," +
+					" DESC VARCHAR(200)," +
+					"L_ID INT," +
+					" FOREIGN KEY(L_ID) REFERENCES LANGUAGE(LANG_ID))";
+			my_db.Execute(stmt, sql_op);
 
-			my_db.Execute(create_table, statement);
-			System.out.println("Inside main()");
+			sql_op = "CREATE TABLE IF NOT EXISTS WORDS " +
+					"(WORD_ID INT PRIMARY KEY ASC," +
+					" WORD VARCHAR(200)," +
+					"L_ID INT," +
+					" FOREIGN KEY(L_ID) REFERENCES LANGUAGE (LANG_ID))";
+			my_db.Execute(stmt, sql_op);
+
+			sql_op = "CREATE TABLE IF NOT EXISTS WORD_IN_CAT " +
+					 "(ID INT PRIMARY KEY ASC," +
+					 " W_ID INT," +
+					 " C_ID INT," +
+					 " FOREIGN KEY(W_ID) REFERENCES WORDS (WORD_ID)," +
+					 " FOREIGN KEY(C_ID) REFERENCES CATEGORY(CAT_ID))";
+			my_db.Execute(stmt, sql_op);
+
+			System.out.println("CREATE TABLE command ok");
+
+			sql_op = "INSERT INTO LANGUAGE(LANG_ID, DESC) " +
+					"VALUES (1, \"Greek\")," +
+					"(2, \"English\")," +
+					"(3, \"German\")";
+			my_db.Execute(stmt, sql_op);
+
+
+			sql_op = "INSERT INTO CATEGORY(CAT_ID, DESC, L_ID) " +
+					"VALUES (0, \"misc\", 2)," +
+					"(1, \"literature\", 2)," +
+					"(2, \"sport\", 2)," +
+					"(3, \"movies\", 2)";
+			my_db.Execute(stmt, sql_op);
+
+			sql_op = "INSERT INTO WORDS(WORD_ID, WORD, L_ID) " +
+					"VALUES (1, \"literature\", 2)," +
+					"(2, \"written\", 2)," +
+					"(3, \"spoken\", 2)," +
+			        "(4, \"horror\", 2)";
+			my_db.Execute(stmt, sql_op);
+
+			sql_op = "INSERT INTO WORD_IN_CAT(ID, W_ID, C_ID) " +
+					"VALUES (0, 1, 1)," +
+					"(1, 2, 1)," +
+					"(2, 3, 1)," +
+			        "(3, 4, 3)";
+			my_db.Execute(stmt, sql_op);
+
+			System.out.println("INSERT command ok");
+
+			sql_op = "SELECT WORD FROM WORDS, WORD_IN_CAT " +
+					 "WHERE WORD_ID = W_ID " +
+					 "AND L_ID = 2 " +
+					 "AND C_ID = 1";
+			my_db.Execute(stmt, sql_op);
 			while(my_db.Result().next())
 			{
-				int id = my_db.Result().getInt("ID");
-				String des = my_db.Result().getString("DESC");
-
-				System.out.println("ID: " + id);
-				System.out.println("DESC: " + des);
+				String word = my_db.Result().getString("WORD");
+				System.out.print("Word: " + word + '\n');
 			}
 		}
-		catch(SQLException ex)
-		{
-			System.err.println("Exception: " + ex.getMessage());
-		}
+		catch(SQLException ex){ System.err.println("Exception: " + ex.getMessage()); }
 
-		System.out.println("Opened database and created table successfully");
 	}
 
 	private static boolean ChooseMode(String mode) { return !mode.isEmpty() && (mode.equalsIgnoreCase("easy")); }
